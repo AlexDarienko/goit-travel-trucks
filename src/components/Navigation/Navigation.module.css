@@ -1,0 +1,16 @@
+.nav {
+  background: #004080;
+  padding: 1rem;
+}
+.list {
+  display: flex;
+  gap: 1rem;
+}
+.link {
+  color: white;
+  font-weight: normal;
+}
+.active {
+  color: #ffcc00;
+  font-weight: bold;
+}

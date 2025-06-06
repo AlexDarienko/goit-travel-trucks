@@ -1,0 +1,13 @@
+.catalog {
+  padding: 1rem;
+}
+.error {
+  color: red;
+  margin: 1rem 0;
+}
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}

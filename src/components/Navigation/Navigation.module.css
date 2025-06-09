@@ -1,5 +1,5 @@
 .nav {
-  background: #004080;
+  background: #F7F7F7;
   padding: 1rem;
 }
 .list {
@@ -7,10 +7,15 @@
   gap: 1rem;
 }
 .link {
-  color: white;
+  color: #101828;
   font-weight: normal;
 }
 .active {
-  color: #ffcc00;
+  color: #D84343;
   font-weight: bold;
+}
+
+.logoContainer {
+  padding-left: 64px;
+  padding-right: 128px;
 }

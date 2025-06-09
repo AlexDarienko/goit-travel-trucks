@@ -4,6 +4,7 @@ import {
   fetchCampers,
   selectCampers,
   selectLoading,
+  selectFilters,
   selectError,
   selectHasMore,
 } from '../../features/campers/campersSlice';
@@ -18,13 +19,19 @@ export default function CatalogPage() {
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const hasMore = useSelector(selectHasMore);
+  const filters = useSelector(selectFilters);
 
   useEffect(() => {
-    dispatch(fetchCampers({ location: '', type: '', options: { ac: false, kitchen: false }, page: 1 }));
-  }, [dispatch]);
+    dispatch(fetchCampers({ ...filters, page: 1 }));
+  }, [dispatch, filters]);
 
   const loadMore = () => {
-    dispatch(fetchCampers({ page: Math.floor(campers.length / 6) + 1 }));
+    dispatch(
+      fetchCampers({
+        ...filters,
+        page: Math.floor(campers.length / 6) + 1,
+      })
+    );
   };
 
   return (

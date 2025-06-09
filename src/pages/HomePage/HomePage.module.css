@@ -1,23 +1,68 @@
 .home {
-  padding: 2rem;
-  text-align: center;
-  background: url('https://source.unsplash.com/featured/?camper') center/cover no-repeat;
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: bottom;
+  min-height: 100vh;
+  padding: 80px 20px;
   color: white;
-  min-height: 80vh;
+  text-align: center;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
-.ctaBtn {
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  background: #ffcc00;
-  color: #004080;
-  font-size: 1.1rem;
-  border-radius: 4px;
-  font-weight: bold;
+
+.overlay {
+  text-align: left;
+  max-width: 700px;
+  padding: 0 40px;
 }
-.ctaBtn:hover {
-  background: #e6b800;
+
+.overlay h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.overlay p {
+  font-size: 20px;
+  margin-bottom: 50px;
+}
+
+.cta {
+  background-color: #E44848;
+  color: white;
+  padding: 14px 32px;
+  font-weight: 500;
+  font-size: 18px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.cta:hover {
+  background-color: #d03c3c;
+}
+
+.header {
+  background-color: white;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #101828;
+}
+
+.nav a {
+  margin-left: 24px;
+  text-decoration: none;
+  font-weight: 500;
+  color: #475467;
+}
+
+.nav a.active {
+  color: #E44848;
 }

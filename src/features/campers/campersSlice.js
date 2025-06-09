@@ -10,18 +10,10 @@ export const fetchCampers = createAsyncThunk(
   'campers/fetchCampers',
   async ({ page = 1, limit = 10, filters = '' }, thunkAPI) => {
     try {
-      // Якщо потрібно враховувати фільтр за назвою:
       const response = await axios.get(BASE_URL, {
-        params: {
-          page,
-          limit,
-          search: filters, // mockAPI може використовувати ?search=...
-        },
+        params: { page, limit, search: filters },
       });
-      return {
-        items: response.data,
-        total: Number(response.headers['x-total-count'] || response.data.length),
-      };
+      return response.data;  // Повертаємо масив прямо
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -54,11 +46,17 @@ export const campersSlice = createSlice({
       type: '',
       amenities: [],
     },
+    page: 1,
+    limit: 10,
+    total: 0,
   },
   reducers: {
     // Якщо потрібно ще синхронні дії - додавайте сюди
     setFilters(state, action) {
       state.filters = action.payload;
+    },
+    setPage(state, action) {
+      state.page = action.payload;
     },
     resetCampers(state) {
       state.items = [];
@@ -73,7 +71,10 @@ export const campersSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchCampers.fulfilled, (state, action) => {
-        const newCampers = Array.isArray(action.payload) ? action.payload : [];
+        const payload = action.payload;
+        const newCampers = Array.isArray(payload)
+          ? payload
+          : (payload.items || []);
         if (newCampers.length === 0) {
           state.hasMore = false;
         }
@@ -106,7 +107,7 @@ export default campersSlice.reducer;
 
 // Селектори
 export const selectCampers = state => state.campers.items;
-export const selectCurrentCamper = state => state.campers.current;
+export const selectCurrentCamper = state => state.campers.currentCamper;
 export const selectLoading = state => state.campers.loading;
 export const selectError = state => state.campers.error;
 export const selectHasMore = state => state.campers.hasMore;

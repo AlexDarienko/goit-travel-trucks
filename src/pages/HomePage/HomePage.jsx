@@ -5,11 +5,13 @@ import css from './HomePage.module.css';
 export default function HomePage() {
   return (
     <section className={css.home}>
-      <h1>Welcome to TravelTrucks</h1>
-      <p>Rent your perfect camper and hit the road!</p>
-      <Link to="/catalog" className={css.ctaBtn}>
-        View Now
-      </Link>
+      <div className={css.overlay}>
+        <h1>Campers of your dreams</h1>
+        <p>You can find everything you want in our catalog</p>
+        <Link to="/catalog" className={css.cta}>
+          View Now
+        </Link>
+      </div>
     </section>
   );
 }

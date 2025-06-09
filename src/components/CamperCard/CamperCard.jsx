@@ -22,7 +22,7 @@ export default function CamperCard({ camper }) {
 
   return (
     <div className={css.card}>
-      <img src={camper.image} alt={camper.name} className={css.image} />
+      <img src={camper.gallery?.[0]?.thumb || '/fallback.jpg'} alt={camper.name} className={css.image} />
       <h3 className={css.title}>{camper.name}</h3>
       <p className={css.price}>${priceNumber.toFixed(2)}</p>
       <div className={css.actions}>

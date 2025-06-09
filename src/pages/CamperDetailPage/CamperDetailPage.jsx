@@ -31,7 +31,7 @@ export default function CamperDetailPage() {
         ← Back to Catalog
       </Link>
       <div className={css.top}>
-        <img src={camper.image} alt={camper.name} className={css.image} />
+        <img src={camper.gallery?.[0]?.thumb || '/fallback.jpg'} alt={camper.name} className={css.image} />
         <div className={css.info}>
           <h2>{camper.name}</h2>
           <p className={css.price}>${camper.price.toFixed(2)}</p>

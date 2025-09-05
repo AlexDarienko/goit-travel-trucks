@@ -43,8 +43,8 @@ export default function CamperDetailPage() {
         </div>
       </div>
       <div className={css.gallery}>
-        {camper.photos?.map((url, idx) => (
-          <img key={idx} src={url} alt={`Photo ${idx + 1}`} className={css.photo} />
+        {camper.gallery?.map((img, idx) => (
+          <img key={idx} src={img.original || img.thumb} alt={`Photo ${idx + 1}`} className={css.photo} />
         ))}
       </div>
       <BookingForm camperId={id} />

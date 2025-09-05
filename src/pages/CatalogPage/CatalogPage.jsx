@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+// src/pages/CatalogPage/CatalogPage.jsx
+import React, { useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   fetchCampers,
+  resetList,
   selectCampers,
   selectLoading,
-  selectFilters,
   selectError,
   selectHasMore,
 } from '../../features/campers/campersSlice';
@@ -19,32 +20,57 @@ export default function CatalogPage() {
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const hasMore = useSelector(selectHasMore);
-  const filters = useSelector(selectFilters);
+
+  // зберігаємо останні фільтри, щоб load more діставав ті ж критерії
+  const lastFilters = useRef({});
 
   useEffect(() => {
-    dispatch(fetchCampers({ ...filters, page: 1 }));
-  }, [dispatch, filters]);
+    dispatch(resetList());
+    lastFilters.current = {};
+    dispatch(fetchCampers({ page: 1, limit: 6, reset: true, filters: {} }));
+  }, [dispatch]);
+
+  const handleFilterSubmit = useCallback(
+    (filters) => {
+      lastFilters.current = filters;
+      dispatch(resetList());
+      dispatch(fetchCampers({ page: 1, limit: 6, reset: true, filters }));
+    },
+    [dispatch]
+  );
 
   const loadMore = () => {
+    const nextPage = Math.floor(campers.length / 6) + 1;
     dispatch(
       fetchCampers({
-        ...filters,
-        page: Math.floor(campers.length / 6) + 1,
+        page: nextPage,
+        limit: 6,
+        reset: false,
+        filters: lastFilters.current,
       })
     );
   };
 
   return (
     <section className={css.catalog}>
-      <h2>Catalog</h2>
-      <FilterForm />
+      <h2 className={css.title}>Catalog</h2>
+
+      <FilterForm onSubmit={handleFilterSubmit} />
+
       {error && <p className={css.error}>Error: {error}</p>}
+
+      {!loading && !error && campers.length === 0 && (
+        <p className={css.empty}>Nothing found. Try to change filters.</p>
+      )}
+
       <div className={css.grid}>
-        {campers.map(camper => (
+        {campers.map((camper) => (
           <CamperCard key={camper.id} camper={camper} />
         ))}
       </div>
-      {loading && <p>Loading...</p>}
+
+      {loading && <p className={css.loading}>Loading…</p>}
+
       {!loading && campers.length > 0 && hasMore && (
         <LoadMoreBtn onClick={loadMore} />
       )}

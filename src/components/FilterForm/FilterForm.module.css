@@ -1,29 +1,91 @@
 .form {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: white;
-  margin-bottom: 1rem;
-  border-radius: 4px;
+  display: grid;
+  gap: 24px;
 }
-.input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+
+.label {}
+
+.labelTitle {
+  display: block;
+  color: #6b7280;
+  margin-bottom: 8px;
 }
-.checkbox {
-  display: flex;
+
+.inputWrap {
+  display: grid;
+  grid-template-columns: 24px 1fr;
   align-items: center;
-  gap: 0.25rem;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
 }
-.button {
-  padding: 0.5rem 1rem;
-  background: #004080;
-  color: white;
+
+.inputIcon {
+  opacity: 0.7;
+}
+
+.input {
   border: none;
-  border-radius: 4px;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+  color: #111827;
+}
+
+.block {}
+
+.blockTitle {
+  color: #6b7280;
+  margin: 0 0 8px;
+}
+
+.groupTitle {
+  font-weight: 600;
+  margin: 8px 0 12px;
+}
+
+.chips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 14px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 500;
   cursor: pointer;
 }
-.button:hover {
-  background: #003060;
+
+.chipActive {
+  outline: 2px solid #e44848;
+  background: #fff5f5;
+}
+
+.ic {
+  font-size: 18px;
+}
+
+.submit {
+  margin-top: 8px;
+  height: 56px;
+  border-radius: 200px;
+  border: none;
+  background: #e44848;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: #d23c3c;
 }

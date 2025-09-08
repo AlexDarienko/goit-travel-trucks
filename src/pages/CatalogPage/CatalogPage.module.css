@@ -1,13 +1,52 @@
-.catalog {
-  padding: 1rem;
+.page {
+  padding-block: 2rem 4rem;
 }
+
+.container {
+  max-width: 1200px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 2rem;
+  padding-inline: 1rem;
+}
+
+.sidebar {
+  position: sticky;
+  top: 88px;
+  /* шапка + невеликий відступ */
+  align-self: start;
+}
+
+.content {}
+
 .error {
-  color: red;
-  margin: 1rem 0;
+  color: #d92c2c;
+  margin-bottom: 1rem;
 }
-.grid {
+
+.loading {
+  margin-top: 1rem;
+  color: #6b7280;
+}
+
+.empty {
+  margin-top: 1rem;
+  color: #6b7280;
+}
+
+.list {
+  display: grid;
+  gap: 24px;
+  padding: 0;
+}
+
+.item {
+  list-style: none;
+}
+
+.loadMoreWrap {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
   justify-content: center;
+  margin-top: 24px;
 }

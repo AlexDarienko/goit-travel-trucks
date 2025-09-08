@@ -1,9 +1,7 @@
-// src/pages/CatalogPage/CatalogPage.jsx
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   fetchCampers,
-  resetList,
   selectCampers,
   selectLoading,
   selectError,
@@ -16,64 +14,54 @@ import css from './CatalogPage.module.css';
 
 export default function CatalogPage() {
   const dispatch = useDispatch();
-  const campers = useSelector(selectCampers);
+  const campers = useSelector(selectCampers) || [];
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const hasMore = useSelector(selectHasMore);
 
-  // зберігаємо останні фільтри, щоб load more діставав ті ж критерії
-  const lastFilters = useRef({});
-
   useEffect(() => {
-    dispatch(resetList());
-    lastFilters.current = {};
-    dispatch(fetchCampers({ page: 1, limit: 6, reset: true, filters: {} }));
+    // перший запит — без фільтрів, 1 сторінка
+    dispatch(fetchCampers({ page: 1 }));
   }, [dispatch]);
 
-  const handleFilterSubmit = useCallback(
-    (filters) => {
-      lastFilters.current = filters;
-      dispatch(resetList());
-      dispatch(fetchCampers({ page: 1, limit: 6, reset: true, filters }));
-    },
-    [dispatch]
-  );
-
   const loadMore = () => {
-    const nextPage = Math.floor(campers.length / 6) + 1;
-    dispatch(
-      fetchCampers({
-        page: nextPage,
-        limit: 6,
-        reset: false,
-        filters: lastFilters.current,
-      })
-    );
+    const next = Math.floor(campers.length / 12) + 1;
+    dispatch(fetchCampers({ page: next }));
   };
 
   return (
-    <section className={css.catalog}>
-      <h2 className={css.title}>Catalog</h2>
+    <section className={css.page}>
+      <div className={css.container}>
+        {/* Ліва колонка — фільтри */}
+        <aside className={css.sidebar}>
+          <FilterForm />
+        </aside>
 
-      <FilterForm onSubmit={handleFilterSubmit} />
+        {/* Права колонка — список карток */}
+        <main className={css.content}>
+          {error && <p className={css.error}>Error: {error}</p>}
 
-      {error && <p className={css.error}>Error: {error}</p>}
+          <ul className={css.list} role="list">
+            {campers.map(camper => (
+              <li key={camper.id} className={css.item}>
+                <CamperCard camper={camper} />
+              </li>
+            ))}
+          </ul>
 
-      {!loading && !error && campers.length === 0 && (
-        <p className={css.empty}>Nothing found. Try to change filters.</p>
-      )}
+          {loading && <p className={css.loading}>Loading…</p>}
 
-      <div className={css.grid}>
-        {campers.map((camper) => (
-          <CamperCard key={camper.id} camper={camper} />
-        ))}
+          {!loading && campers.length > 0 && hasMore && (
+            <div className={css.loadMoreWrap}>
+              <LoadMoreBtn onClick={loadMore} />
+            </div>
+          )}
+
+          {!loading && campers.length === 0 && (
+            <p className={css.empty}>Nothing found. Try to change filters.</p>
+          )}
+        </main>
       </div>
-
-      {loading && <p className={css.loading}>Loading…</p>}
-
-      {!loading && campers.length > 0 && hasMore && (
-        <LoadMoreBtn onClick={loadMore} />
-      )}
     </section>
   );
 }

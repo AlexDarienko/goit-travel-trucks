@@ -1,81 +1,75 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchCampers } from '../../features/campers/campersSlice';
 import css from './FilterForm.module.css';
 
-// onSubmit очікує об’єкт: { location, type, AC, kitchen, TV, bathroom }
-export default function FilterForm({ onSubmit }) {
-  const [location, setLocation] = useState('');
-  const [type, setType] = useState(''); // 'Van' | 'Fully Integrated' | 'Alcove'
-  const [AC, setAC] = useState(false);
-  const [kitchen, setKitchen] = useState(false);
-  const [TV, setTV] = useState(false);
-  const [bathroom, setBathroom] = useState(false);
+export default function FilterForm() {
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const [location, setLocation] = useState('Kyiv, Ukraine');
+  const [equipment, setEquipment] = useState({
+    AC: true, automatic: false, kitchen: false, TV: false, bathroom: false,
+  });
+  const [vehicleType, setVehicleType] = useState(''); // 'van' | 'fully' | 'alcove' | ''
+
+  const toggleEq = key => setEquipment(prev => ({ ...prev, [key]: !prev[key] }));
+  const chooseType = type => setVehicleType(prev => (prev === type ? '' : type));
+
+  const onSearch = e => {
     e.preventDefault();
-    onSubmit({ location, type, AC, kitchen, TV, bathroom });
+    // ВАЖЛИВО: просто тягнемо сторінку 1. У твоєму slice це означає «перезаписати список»
+    dispatch(
+      fetchCampers({
+        page: 1,
+        location,
+        type: vehicleType,
+        options: {
+          ac: equipment.AC,
+          automatic: equipment.automatic,
+          kitchen: equipment.kitchen,
+          tv: equipment.TV,
+          bathroom: equipment.bathroom,
+        },
+      })
+    );
   };
 
   return (
-    <form className={css.form} onSubmit={handleSubmit}>
-      {/* Location */}
-      <label className={css.field}>
-        <span className={css.label}>Location</span>
-        <input
-          className={css.input}
-          type="text"
-          placeholder="Kyiv, Ukraine"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
+    <form className={css.form} onSubmit={onSearch}>
+      <label className={css.label}>
+        <span className={css.labelTitle}>Location</span>
+        <div className={css.inputWrap}>
+          <span className={css.inputIcon} aria-hidden="true">📍</span>
+          <input
+            className={css.input}
+            type="text"
+            value={location}
+            onChange={e => setLocation(e.target.value)}
+            placeholder="City, Country"
+          />
+        </div>
       </label>
 
-      {/* Vehicle type */}
-      <label className={css.field}>
-        <span className={css.label}>Vehicle type</span>
-        <select
-          className={css.select}
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <option value="">Any</option>
-          <option value="Van">Van</option>
-          <option value="Fully Integrated">Fully Integrated</option>
-          <option value="Alcove">Alcove</option>
-        </select>
-      </label>
+      <div className={css.block}>
+        <p className={css.blockTitle}>Filters</p>
+        <p className={css.groupTitle}>Vehicle equipment</p>
+        <div className={css.chips}>
+          <button type="button" className={`${css.chip} ${equipment.AC ? css.chipActive : ''}`} onClick={() => toggleEq('AC')}><span className={css.ic}>❄️</span> AC</button>
+          <button type="button" className={`${css.chip} ${equipment.automatic ? css.chipActive : ''}`} onClick={() => toggleEq('automatic')}><span className={css.ic}>⚙️</span> Automatic</button>
+          <button type="button" className={`${css.chip} ${equipment.kitchen ? css.chipActive : ''}`} onClick={() => toggleEq('kitchen')}><span className={css.ic}>🍳</span> Kitchen</button>
+          <button type="button" className={`${css.chip} ${equipment.TV ? css.chipActive : ''}`} onClick={() => toggleEq('TV')}><span className={css.ic}>📺</span> TV</button>
+          <button type="button" className={`${css.chip} ${equipment.bathroom ? css.chipActive : ''}`} onClick={() => toggleEq('bathroom')}><span className={css.ic}>🚿</span> Bathroom</button>
+        </div>
 
-      {/* Equipment */}
-      <fieldset className={css.equipment}>
-        <legend className={css.legend}>Vehicle equipment</legend>
-        <label className={css.check}>
-          <input type="checkbox" checked={AC} onChange={() => setAC((v) => !v)} />
-          <span>AC</span>
-        </label>
-        <label className={css.check}>
-          <input
-            type="checkbox"
-            checked={kitchen}
-            onChange={() => setKitchen((v) => !v)}
-          />
-          <span>Kitchen</span>
-        </label>
-        <label className={css.check}>
-          <input type="checkbox" checked={TV} onChange={() => setTV((v) => !v)} />
-          <span>TV</span>
-        </label>
-        <label className={css.check}>
-          <input
-            type="checkbox"
-            checked={bathroom}
-            onChange={() => setBathroom((v) => !v)}
-          />
-          <span>Bathroom</span>
-        </label>
-      </fieldset>
+        <p className={css.groupTitle}>Vehicle type</p>
+        <div className={css.chips}>
+          <button type="button" className={`${css.chip} ${vehicleType === 'van' ? css.chipActive : ''}`} onClick={() => chooseType('van')}><span className={css.ic}>🚐</span> Van</button>
+          <button type="button" className={`${css.chip} ${vehicleType === 'fully' ? css.chipActive : ''}`} onClick={() => chooseType('fully')}><span className={css.ic}>🏕️</span> Fully Integrated</button>
+          <button type="button" className={`${css.chip} ${vehicleType === 'alcove' ? css.chipActive : ''}`} onClick={() => chooseType('alcove')}><span className={css.ic}>🛏️</span> Alcove</button>
+        </div>
+      </div>
 
-      <button type="submit" className={css.submit}>
-        Search
-      </button>
+      <button type="submit" className={css.submit}>Search</button>
     </form>
   );
 }

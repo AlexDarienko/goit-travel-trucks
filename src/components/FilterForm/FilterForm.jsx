@@ -1,75 +1,196 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchCampers } from '../../features/campers/campersSlice';
-import css from './FilterForm.module.css';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function FilterForm() {
+import {
+  setLocation,
+  setForm,
+  toggleFeature,
+} from '../../redux/filters/filtersSlice';
+
+import {
+  fetchCampers,
+  resetCampers,
+} from '../../redux/campers/campersSlice';
+
+import styles from './FilterForm.module.css';
+
+import {
+  FaWind,
+  FaTv,
+  FaShower,
+} from 'react-icons/fa';
+
+import { GiGasStove } from 'react-icons/gi';
+
+const FilterForm = () => {
   const dispatch = useDispatch();
 
-  const [location, setLocation] = useState('Kyiv, Ukraine');
-  const [equipment, setEquipment] = useState({
-    AC: true, automatic: false, kitchen: false, TV: false, bathroom: false,
-  });
-  const [vehicleType, setVehicleType] = useState(''); // 'van' | 'fully' | 'alcove' | ''
+  const filters = useSelector(state => state.filters);
 
-  const toggleEq = key => setEquipment(prev => ({ ...prev, [key]: !prev[key] }));
-  const chooseType = type => setVehicleType(prev => (prev === type ? '' : type));
-
-  const onSearch = e => {
+  const handleSearch = e => {
     e.preventDefault();
-    // ВАЖЛИВО: просто тягнемо сторінку 1. У твоєму slice це означає «перезаписати список»
-    dispatch(
-      fetchCampers({
-        page: 1,
-        location,
-        type: vehicleType,
-        options: {
-          ac: equipment.AC,
-          automatic: equipment.automatic,
-          kitchen: equipment.kitchen,
-          tv: equipment.TV,
-          bathroom: equipment.bathroom,
-        },
-      })
-    );
+
+    dispatch(resetCampers());
+    dispatch(fetchCampers({ page: 1, filters }));
   };
 
   return (
-    <form className={css.form} onSubmit={onSearch}>
-      <label className={css.label}>
-        <span className={css.labelTitle}>Location</span>
-        <div className={css.inputWrap}>
-          <span className={css.inputIcon} aria-hidden="true">📍</span>
-          <input
-            className={css.input}
-            type="text"
-            value={location}
-            onChange={e => setLocation(e.target.value)}
-            placeholder="City, Country"
-          />
-        </div>
-      </label>
+    <form className={styles.form} onSubmit={handleSearch}>
+      {/* Location */}
+      <div className={styles.locationBlock}>
+        <label className={styles.label}>Location</label>
 
-      <div className={css.block}>
-        <p className={css.blockTitle}>Filters</p>
-        <p className={css.groupTitle}>Vehicle equipment</p>
-        <div className={css.chips}>
-          <button type="button" className={`${css.chip} ${equipment.AC ? css.chipActive : ''}`} onClick={() => toggleEq('AC')}><span className={css.ic}>❄️</span> AC</button>
-          <button type="button" className={`${css.chip} ${equipment.automatic ? css.chipActive : ''}`} onClick={() => toggleEq('automatic')}><span className={css.ic}>⚙️</span> Automatic</button>
-          <button type="button" className={`${css.chip} ${equipment.kitchen ? css.chipActive : ''}`} onClick={() => toggleEq('kitchen')}><span className={css.ic}>🍳</span> Kitchen</button>
-          <button type="button" className={`${css.chip} ${equipment.TV ? css.chipActive : ''}`} onClick={() => toggleEq('TV')}><span className={css.ic}>📺</span> TV</button>
-          <button type="button" className={`${css.chip} ${equipment.bathroom ? css.chipActive : ''}`} onClick={() => toggleEq('bathroom')}><span className={css.ic}>🚿</span> Bathroom</button>
-        </div>
+        <input
+          type="text"
+          className={styles.locationInput}
+          placeholder="Kyiv, Ukraine"
+          value={filters.location}
+          onChange={e =>
+            dispatch(setLocation(e.target.value))
+          }
+        />
+      </div>
 
-        <p className={css.groupTitle}>Vehicle type</p>
-        <div className={css.chips}>
-          <button type="button" className={`${css.chip} ${vehicleType === 'van' ? css.chipActive : ''}`} onClick={() => chooseType('van')}><span className={css.ic}>🚐</span> Van</button>
-          <button type="button" className={`${css.chip} ${vehicleType === 'fully' ? css.chipActive : ''}`} onClick={() => chooseType('fully')}><span className={css.ic}>🏕️</span> Fully Integrated</button>
-          <button type="button" className={`${css.chip} ${vehicleType === 'alcove' ? css.chipActive : ''}`} onClick={() => chooseType('alcove')}><span className={css.ic}>🛏️</span> Alcove</button>
+      {/* Filters */}
+      <p className={styles.filtersTitle}>Filters</p>
+
+      {/* Equipment */}
+      <div className={styles.block}>
+        <h3 className={styles.blockTitle}>
+          Vehicle equipment
+        </h3>
+
+        <div className={styles.grid}>
+          {/* AC */}
+          <button
+            type="button"
+            className={`${styles.card} ${
+              filters.features.AC
+                ? styles.active
+                : ''
+            }`}
+            onClick={() =>
+              dispatch(toggleFeature('AC'))
+            }
+          >
+            <FaWind size={24} />
+            <span>AC</span>
+          </button>
+
+          {/* Kitchen */}
+          <button
+            type="button"
+            className={`${styles.card} ${
+              filters.features.kitchen
+                ? styles.active
+                : ''
+            }`}
+            onClick={() =>
+              dispatch(toggleFeature('kitchen'))
+            }
+          >
+            <GiGasStove size={24} />
+            <span>Kitchen</span>
+          </button>
+
+          {/* TV */}
+          <button
+            type="button"
+            className={`${styles.card} ${
+              filters.features.TV
+                ? styles.active
+                : ''
+            }`}
+            onClick={() =>
+              dispatch(toggleFeature('TV'))
+            }
+          >
+            <FaTv size={24} />
+            <span>TV</span>
+          </button>
+
+          {/* Bathroom */}
+          <button
+            type="button"
+            className={`${styles.card} ${
+              filters.features.bathroom
+                ? styles.active
+                : ''
+            }`}
+            onClick={() =>
+              dispatch(toggleFeature('bathroom'))
+            }
+          >
+            <FaShower size={24} />
+            <span>Bathroom</span>
+          </button>
         </div>
       </div>
 
-      <button type="submit" className={css.submit}>Search</button>
+      {/* Vehicle type */}
+      <div className={styles.block}>
+        <h3 className={styles.blockTitle}>
+          Vehicle type
+        </h3>
+
+        <div className={styles.grid}>
+          {/* Van */}
+          <button
+            type="button"
+            className={`${styles.card} ${
+              filters.form === 'panelTruck'
+                ? styles.active
+                : ''
+            }`}
+            onClick={() =>
+              dispatch(setForm('panelTruck'))
+            }
+          >
+            <span>Van</span>
+          </button>
+
+          {/* Fully */}
+          <button
+            type="button"
+            className={`${styles.card} ${
+              filters.form === 'fullyIntegrated'
+                ? styles.active
+                : ''
+            }`}
+            onClick={() =>
+              dispatch(setForm(
+                'fullyIntegrated'
+              ))
+            }
+          >
+            <span>Fully Integrated</span>
+          </button>
+
+          {/* Alcove */}
+          <button
+            type="button"
+            className={`${styles.card} ${
+              filters.form === 'alcove'
+                ? styles.active
+                : ''
+            }`}
+            onClick={() =>
+              dispatch(setForm('alcove'))
+            }
+          >
+            <span>Alcove</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Search */}
+      <button
+        type="submit"
+        className={styles.searchBtn}
+      >
+        Search
+      </button>
     </form>
   );
-}
+};
+
+export default FilterForm;

@@ -1,67 +1,59 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import FilterForm from '../../components/FilterForm/FilterForm';
+import CamperCard from '../../components/CamperCard/CamperCard';
+import LoadMoreBtn from '../../components/LoadMoreBtn/LoadMoreBtn';
+
 import {
   fetchCampers,
-  selectCampers,
-  selectLoading,
-  selectError,
-  selectHasMore,
-} from '../../features/campers/campersSlice';
-import CamperCard from '../../components/CamperCard/CamperCard';
-import FilterForm from '../../components/FilterForm/FilterForm';
-import LoadMoreBtn from '../../components/LoadMoreBtn/LoadMoreBtn';
-import css from './CatalogPage.module.css';
+} from '../../redux/campers/campersSlice';
 
-export default function CatalogPage() {
+import styles from './CatalogPage.module.css';
+
+const CatalogPage = () => {
   const dispatch = useDispatch();
-  const campers = useSelector(selectCampers) || [];
-  const loading = useSelector(selectLoading);
-  const error = useSelector(selectError);
-  const hasMore = useSelector(selectHasMore);
+
+  const {
+    items,
+    page,
+    isLoading,
+    hasMore,
+  } = useSelector(state => state.campers);
+
+  const filters = useSelector(state => state.filters);
 
   useEffect(() => {
-    // перший запит — без фільтрів, 1 сторінка
-    dispatch(fetchCampers({ page: 1 }));
+    dispatch(fetchCampers({ page: 1, filters }));
   }, [dispatch]);
 
-  const loadMore = () => {
-    const next = Math.floor(campers.length / 12) + 1;
-    dispatch(fetchCampers({ page: next }));
-  };
-
   return (
-    <section className={css.page}>
-      <div className={css.container}>
-        {/* Ліва колонка — фільтри */}
-        <aside className={css.sidebar}>
-          <FilterForm />
-        </aside>
+  <div className={styles.wrapper}>
+    {/* Left: Filters */}
+    <FilterForm />
 
-        {/* Права колонка — список карток */}
-        <main className={css.content}>
-          {error && <p className={css.error}>Error: {error}</p>}
+    {/* Right: Cards */}
+    <div>
+      <ul className={styles.list}>
+        {items.map(camper => (
+          <li key={camper.id}>
+            <CamperCard camper={camper} />
+          </li>
+        ))}
+      </ul>
 
-          <ul className={css.list} role="list">
-            {campers.map(camper => (
-              <li key={camper.id} className={css.item}>
-                <CamperCard camper={camper} />
-              </li>
-            ))}
-          </ul>
+      {isLoading && <p>Loading...</p>}
 
-          {loading && <p className={css.loading}>Loading…</p>}
+      {hasMore && !isLoading && (
+        <LoadMoreBtn
+          onClick={() =>
+            dispatch(fetchCampers({ page, filters }))
+          }
+        />
+      )}
+    </div>
+  </div>
+);
+};
 
-          {!loading && campers.length > 0 && hasMore && (
-            <div className={css.loadMoreWrap}>
-              <LoadMoreBtn onClick={loadMore} />
-            </div>
-          )}
-
-          {!loading && campers.length === 0 && (
-            <p className={css.empty}>Nothing found. Try to change filters.</p>
-          )}
-        </main>
-      </div>
-    </section>
-  );
-}
+export default CatalogPage;

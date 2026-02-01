@@ -36,9 +36,13 @@
 }
 
 .list {
-  display: grid;
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .item {
@@ -49,4 +53,14 @@
   display: flex;
   justify-content: center;
   margin-top: 24px;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 32px;
+
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
 }

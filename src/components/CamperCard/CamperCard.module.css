@@ -165,3 +165,15 @@
 .moreBtn:hover {
   background: #d23c3c;
 }
+
+/* Favorite active */
+
+.favActive {
+  background-color: #e44848;
+}
+
+.favActive::before {
+  content: '❤';
+  color: white;
+  font-size: 14px;
+}

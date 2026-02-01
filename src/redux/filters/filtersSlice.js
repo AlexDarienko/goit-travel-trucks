@@ -8,6 +8,7 @@ const initialState = {
     kitchen: false,
     TV: false,
     bathroom: false,
+    automatic: false,
   },
 };
 

@@ -115,46 +115,88 @@ const CamperDetailsPage = () => {
             <>
               {/* Features */}
               <div className={styles.features}>
-                {data.transmission && (
-                  <span>
-                    🚗 {data.transmission}
-                  </span>
-                )}
-                {data.AC && <span>❄️ AC</span>}
-                {data.kitchen && (
-                  <span>🍳 Kitchen</span>
-                )}
-                {data.TV && <span>📺 TV</span>}
-                {data.radio && (
-                  <span>📻 Radio</span>
-                )}
-              </div>
+  {data.transmission && (
+    <div className={styles.featureItem}>
+      ⚙️ <span>Automatic</span>
+    </div>
+  )}
+
+  {data.AC && (
+    <div className={styles.featureItem}>
+      ❄️ <span>AC</span>
+    </div>
+  )}
+
+  {data.engine && (
+    <div className={styles.featureItem}>
+      ⛽ <span>Petrol</span>
+    </div>
+  )}
+
+  {data.kitchen && (
+    <div className={styles.featureItem}>
+      🍳 <span>Kitchen</span>
+    </div>
+  )}
+
+  {data.radio && (
+    <div className={styles.featureItem}>
+      📻 <span>Radio</span>
+    </div>
+  )}
+</div>
 
               {/* Details */}
               <div className={styles.details}>
                 <h3>Vehicle details</h3>
 
-                <ul>
-                  <li>
-                    Form: {data.form}
-                  </li>
-                  <li>
-                    Length: {data.length}
-                  </li>
-                  <li>
-                    Width: {data.width}
-                  </li>
-                  <li>
-                    Height: {data.height}
-                  </li>
-                  <li>
-                    Tank: {data.tank}
-                  </li>
-                  <li>
-                    Consumption:{' '}
-                    {data.consumption}
-                  </li>
-                </ul>
+                <ul className={styles.detailsList}>
+  <li>
+    <span>Form</span>
+    <span>{data.form}</span>
+  </li>
+
+  <li>
+    <span>Length</span>
+    <span>
+      {String(data.length).includes('m')
+        ? data.length
+        : `${data.length} m`}
+    </span>
+  </li>
+
+  <li>
+    <span>Width</span>
+    <span>
+      {String(data.width).includes('m')
+        ? data.width
+        : `${data.width} m`}
+    </span>
+  </li>
+
+  <li>
+    <span>Height</span>
+    <span>
+      {String(data.height).includes('m')
+        ? data.height
+        : `${data.height} m`}
+    </span>
+  </li>
+
+  <li>
+    <span>Tank</span>
+    <span>
+      {String(data.tank).includes('l')
+        ? data.tank
+        : `${data.tank} l`}
+    </span>
+  </li>
+
+  <li>
+    <span>Consumption</span>
+    <span>{data.consumption}</span>
+  </li>
+</ul>
               </div>
             </>
           )}

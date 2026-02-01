@@ -1,4 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { BsTruck } from 'react-icons/bs';
+import { MdGridView } from 'react-icons/md';
+import { HiViewGrid } from 'react-icons/hi';
+import { GiGearStickPattern } from 'react-icons/gi';
 
 import {
   setLocation,
@@ -76,6 +80,22 @@ const FilterForm = () => {
             <span>AC</span>
           </button>
 
+          {/* Automatic */}
+<button
+  type="button"
+  className={`${styles.card} ${
+    filters.features.automatic
+      ? styles.active
+      : ''
+  }`}
+  onClick={() =>
+    dispatch(toggleFeature('automatic'))
+  }
+>
+  <GiGearStickPattern size={24} />
+  <span>Automatic</span>
+</button>
+
           {/* Kitchen */}
           <button
             type="button"
@@ -127,60 +147,61 @@ const FilterForm = () => {
       </div>
 
       {/* Vehicle type */}
-      <div className={styles.block}>
-        <h3 className={styles.blockTitle}>
-          Vehicle type
-        </h3>
+<div className={styles.block}>
+  <h3 className={styles.blockTitle}>
+    Vehicle type
+  </h3>
 
-        <div className={styles.grid}>
-          {/* Van */}
-          <button
-            type="button"
-            className={`${styles.card} ${
-              filters.form === 'panelTruck'
-                ? styles.active
-                : ''
-            }`}
-            onClick={() =>
-              dispatch(setForm('panelTruck'))
-            }
-          >
-            <span>Van</span>
-          </button>
+  <div className={styles.grid}>
+    {/* Van */}
+    <button
+      type="button"
+      className={`${styles.card} ${
+        filters.form === 'panelTruck'
+          ? styles.active
+          : ''
+      }`}
+      onClick={() =>
+        dispatch(setForm('panelTruck'))
+      }
+    >
+      <BsTruck size={26} />
+      <span>Van</span>
+    </button>
 
-          {/* Fully */}
-          <button
-            type="button"
-            className={`${styles.card} ${
-              filters.form === 'fullyIntegrated'
-                ? styles.active
-                : ''
-            }`}
-            onClick={() =>
-              dispatch(setForm(
-                'fullyIntegrated'
-              ))
-            }
-          >
-            <span>Fully Integrated</span>
-          </button>
+    {/* Fully Integrated */}
+    <button
+      type="button"
+      className={`${styles.card} ${
+        filters.form === 'fullyIntegrated'
+          ? styles.active
+          : ''
+      }`}
+      onClick={() =>
+        dispatch(setForm('fullyIntegrated'))
+      }
+    >
+      <MdGridView size={26} />
+      <span>Fully Integrated</span>
+    </button>
 
-          {/* Alcove */}
-          <button
-            type="button"
-            className={`${styles.card} ${
-              filters.form === 'alcove'
-                ? styles.active
-                : ''
-            }`}
-            onClick={() =>
-              dispatch(setForm('alcove'))
-            }
-          >
-            <span>Alcove</span>
-          </button>
-        </div>
-      </div>
+    {/* Alcove */}
+    <button
+      type="button"
+      className={`${styles.card} ${
+        filters.form === 'alcove'
+          ? styles.active
+          : ''
+      }`}
+      onClick={() =>
+        dispatch(setForm('alcove'))
+      }
+    >
+      <HiViewGrid size={26} />
+      <span>Alcove</span>
+    </button>
+  </div>
+</div>
 
       {/* Search */}
       <button

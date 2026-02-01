@@ -24,10 +24,19 @@ export const fetchCampers = createAsyncThunk(
       }
 
       Object.entries(filters.features).forEach(
-        ([key, value]) => {
-          if (value) params[key] = true;
-        }
-      );
+  ([key, value]) => {
+    if (!value) return;
+
+    // Automatic -> transmission
+    if (key === 'automatic') {
+      params.transmission = 'automatic';
+      return;
+    }
+
+    // Other features
+    params[key] = true;
+  }
+);
 
       const res = await axios.get(BASE_URL, { params });
 

@@ -6,12 +6,14 @@ import App from './App';
 import { store } from './redux/store';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
+import { ToastContainer } from 'react-toastify';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <BrowserRouter>
       <App />
       <Toaster position="top-right" />
+      <ToastContainer />
     </BrowserRouter>
   </Provider>
 );
